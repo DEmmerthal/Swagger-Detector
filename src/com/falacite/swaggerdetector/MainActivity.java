@@ -7,26 +7,15 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.Menu;
 import android.widget.TextView;
 import com.falacite.swaggerdetector.DetectorView.DetectorThread;
 
 public class MainActivity extends Activity implements SensorEventListener {
-    private SensorManager _sensorManager;
 
     /**
      * A handle to the thread that's actually running the animation.
      */
     private DetectorThread _detectorThread;
-
-    /**
-     * A handle to the View in which the game is running.
-     */
-    private DetectorView _detectorView;
-
-    private TextView _swaggerLevelTextView;
-    private String[] _swaggerLevels;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,11 +24,14 @@ public class MainActivity extends Activity implements SensorEventListener {
         // tell system to use the layout defined in our XML file
         setContentView(R.layout.main);
 
-        _detectorView = (DetectorView) findViewById(R.id.detectorView);
-        _detectorThread = _detectorView.getThread();
+        /*
+      A handle to the View in which the game is running.
+     */
+        DetectorView detectorView = (DetectorView) findViewById(R.id.detectorView);
+        _detectorThread = detectorView.getThread();
 
-        _sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        _sensorManager.registerListener(this, _sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY), SensorManager.SENSOR_DELAY_UI);
+        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY), SensorManager.SENSOR_DELAY_UI);
 
     }
 

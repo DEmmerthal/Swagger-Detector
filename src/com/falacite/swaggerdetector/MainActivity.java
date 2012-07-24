@@ -43,6 +43,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        _detectorThread.setGravityY(event.values[1]);
+        _detectorThread.setDetectorPercentage(event.values[1]);
     }
 }

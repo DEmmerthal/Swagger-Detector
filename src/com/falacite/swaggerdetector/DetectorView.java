@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -20,17 +21,25 @@ public class DetectorView extends SurfaceView implements SurfaceHolder.Callback 
     class DetectorThread extends Thread {
         private SurfaceHolder _surfaceHolder;
         private boolean _run = false;
-        private float _gravityY = 0;
+        private float _detectorPercentage = 0;
         private Paint _paint = new Paint();
 
         public DetectorThread(SurfaceHolder surfaceHolder, Context context) {
             _surfaceHolder = surfaceHolder;
             _paint.setColor(Color.RED);
-            _paint.setStrokeWidth(200);
+            _paint.setStrokeWidth(300);
         }
-
-        public void setGravityY(float gravityY) {
-            _gravityY = gravityY;
+        //Calculate detector percentage based off of a range between 7 and 9.8(Maximum gravity sensor output)
+        public void setDetectorPercentage(float gravityY) {
+            Log.d("gravityY", String.valueOf(gravityY));
+            if (gravityY < 5){
+                gravityY = 5;
+            }
+            else if (gravityY > 9.8){
+                gravityY = (float) 9.8;
+            }
+            Log.d("gravityY", String.valueOf(gravityY));
+            _detectorPercentage = (float) ((gravityY - 5)/(9.8 - 5));
         }
 
         public void setRunning(boolean run) {
@@ -39,7 +48,10 @@ public class DetectorView extends SurfaceView implements SurfaceHolder.Callback 
 
         private void doDraw(Canvas c) {
             c.drawColor(Color.BLACK);
-            c.drawLine(350, 900, 350, 900 - _gravityY * 70, _paint);
+            Log.d("_detectorPercentage", String.valueOf(_detectorPercentage));
+            Log.d("calculatedHeight", String.valueOf(c.getHeight() - (c.getHeight() * _detectorPercentage)));
+
+            c.drawLine(350, c.getHeight(), 350, c.getHeight() - (c.getHeight() * _detectorPercentage), _paint);
         }
 
         @Override
